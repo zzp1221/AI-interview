@@ -1,0 +1,163 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# ================= 配置区 =================
+
+APP_DIR="/opt/ai-interview"
+
+FRONT_DIR="${APP_DIR}/frontend"
+
+REPO_URL="git@github.com:zzp1221/AI-interview.git"
+
+BRANCH="main"
+
+SERVER_NAME="212.64.23.8"
+
+BACKEND_URL="http://127.0.0.1:8081"
+
+# ==========================================
+
+echo "==> 1. 安装前端依赖（Node20 + pnpm + nginx）"
+
+if ! command -v node >/dev/null 2>&1; then
+
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+
+apt install -y nodejs
+
+fi
+
+if ! command -v pnpm >/dev/null 2>&1; then
+
+npm i -g pnpm
+
+fi
+
+apt install -y nginx
+
+systemctl enable --now nginx
+
+echo "==> 2. 拉取代码"
+
+mkdir -p /opt
+
+if [ ! -d "${APP_DIR}/.git" ]; then
+
+git clone -b "${BRANCH}" "${REPO_URL}" "${APP_DIR}"
+
+else
+
+cd "${APP_DIR}"
+
+git fetch origin
+
+git checkout "${BRANCH}"
+
+git pull --rebase
+
+fi
+
+echo "==> 3. 构建前端"
+
+cd "${FRONT_DIR}"
+
+# 使用 --frozen-lockfile 确保版本一致，若失败则普通安装
+
+pnpm install --frozen-lockfile || pnpm install
+
+pnpm build
+
+echo "==> 4. 配置 Nginx"
+
+# 这里解决了 405 (POST 请求落入静态资源) 和 404 (前缀剥离) 问题
+
+cat > /etc/nginx/sites-available/ai-interview-frontend.conf <<EOF
+
+server {
+
+listen 80;
+
+server_name ${SERVER_NAME};
+
+root ${FRONT_DIR}/dist;
+
+index index.html;
+
+# 允许上传大文件（简历解析、知识库上传）
+
+client_max_body_size 50M;
+
+# 前端路由支持：解决刷新页面 404 问题
+
+location / {
+
+try_files \$uri \$uri/ /index.html;
+
+}
+
+# 转发登录/注册接口 (后端 UserAuthController)
+
+location /ai/ {
+
+proxy_pass ${BACKEND_URL};
+
+proxy_http_version 1.1;
+
+proxy_set_header Host \$host;
+
+proxy_set_header X-Real-IP \$remote_addr;
+
+proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+
+proxy_set_header X-Forwarded-Proto \$scheme;
+
+}
+
+# 转发业务接口 (后端 Resume/Interview Controller)
+
+location /api/ {
+
+proxy_pass ${BACKEND_URL};
+
+proxy_http_version 1.1;
+
+proxy_set_header Host \$host;
+
+proxy_set_header X-Real-IP \$remote_addr;
+
+proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+
+proxy_set_header X-Forwarded-Proto \$scheme;
+
+# 增加超时时间：AI 生成响应通常较慢，防止 504 错误
+
+proxy_read_timeout 300s;
+
+proxy_connect_timeout 300s;
+
+proxy_send_timeout 300s;
+
+}
+
+}
+
+EOF
+
+# 激活配置并重启
+
+ln -sf /etc/nginx/sites-available/ai-interview-frontend.conf /etc/nginx/sites-enabled/ai-interview-frontend.conf
+
+rm -f /etc/nginx/sites-enabled/default
+
+echo "==> 5. 检查并重载 Nginx"
+
+nginx -t
+
+systemctl reload nginx
+
+echo "==> 部署完成！"
+
+echo "==> 请确保后端服务已在 ${BACKEND_URL} 启动。"
+
+echo "==> 访问地址： http://${SERVER_NAME} "

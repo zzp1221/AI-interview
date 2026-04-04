@@ -1,0 +1,506 @@
+{
+  "name": "interview.modules.knowledgebase.repository.KnowledgeBaseRepository",
+  "module": "JPA",
+  "type": "IMPERATIVE",
+  "methods": [
+    {
+      "name": "countByUserId",
+      "signature": "public abstract long interview.modules.knowledgebase.repository.KnowledgeBaseRepository.countByUserId(java.lang.Long)",
+      "query": {
+        "query": "SELECT COUNT(k) FROM KnowledgeBaseEntity k WHERE k.userId = :userId"
+      }
+    },
+    {
+      "name": "countByUserIdAndVectorStatus",
+      "signature": "public abstract long interview.modules.knowledgebase.repository.KnowledgeBaseRepository.countByUserIdAndVectorStatus(java.lang.Long,interview.modules.knowledgebase.model.VectorStatus)",
+      "query": {
+        "query": "SELECT COUNT(k) FROM KnowledgeBaseEntity k WHERE k.userId = :userId AND k.vectorStatus = :vectorStatus"
+      }
+    },
+    {
+      "name": "countByVectorStatus",
+      "signature": "public abstract long interview.modules.knowledgebase.repository.KnowledgeBaseRepository.countByVectorStatus(interview.modules.knowledgebase.model.VectorStatus)",
+      "query": {
+        "query": "SELECT COUNT(k) FROM KnowledgeBaseEntity k WHERE k.vectorStatus = :vectorStatus"
+      }
+    },
+    {
+      "name": "existsByFileHash",
+      "signature": "public abstract boolean interview.modules.knowledgebase.repository.KnowledgeBaseRepository.existsByFileHash(java.lang.String)",
+      "query": {
+        "query": "SELECT k.id FROM KnowledgeBaseEntity k WHERE k.fileHash = :fileHash"
+      }
+    },
+    {
+      "name": "existsByIdAndUserId",
+      "signature": "public abstract boolean interview.modules.knowledgebase.repository.KnowledgeBaseRepository.existsByIdAndUserId(java.lang.Long,java.lang.Long)",
+      "query": {
+        "query": "SELECT k.id FROM KnowledgeBaseEntity k WHERE k.id = :id AND k.userId = :userId"
+      }
+    },
+    {
+      "name": "findAllByOrderByAccessCountDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findAllByOrderByAccessCountDesc()",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k ORDER BY k.accessCount desc"
+      }
+    },
+    {
+      "name": "findAllByOrderByFileSizeDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findAllByOrderByFileSizeDesc()",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k ORDER BY k.fileSize desc"
+      }
+    },
+    {
+      "name": "findAllByOrderByQuestionCountDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findAllByOrderByQuestionCountDesc()",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k ORDER BY k.questionCount desc"
+      }
+    },
+    {
+      "name": "findAllByOrderByUploadedAtDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findAllByOrderByUploadedAtDesc()",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k ORDER BY k.uploadedAt desc"
+      }
+    },
+    {
+      "name": "findAllCategories",
+      "signature": "public abstract java.util.List<java.lang.String> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findAllCategories()",
+      "query": {
+        "query": "SELECT DISTINCT k.category FROM KnowledgeBaseEntity k WHERE k.category IS NOT NULL ORDER BY k.category"
+      }
+    },
+    {
+      "name": "findAllCategoriesByUserId",
+      "signature": "public abstract java.util.List<java.lang.String> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findAllCategoriesByUserId(java.lang.Long)",
+      "query": {
+        "query": "SELECT DISTINCT k.category FROM KnowledgeBaseEntity k WHERE k.userId = :userId AND k.category IS NOT NULL ORDER BY k.category"
+      }
+    },
+    {
+      "name": "findByCategoryIsNullOrderByUploadedAtDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByCategoryIsNullOrderByUploadedAtDesc()",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.category IS NULL ORDER BY k.uploadedAt desc"
+      }
+    },
+    {
+      "name": "findByCategoryOrderByUploadedAtDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByCategoryOrderByUploadedAtDesc(java.lang.String)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.category = :category ORDER BY k.uploadedAt desc"
+      }
+    },
+    {
+      "name": "findByFileHash",
+      "signature": "public abstract java.util.Optional<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByFileHash(java.lang.String)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.fileHash = :fileHash"
+      }
+    },
+    {
+      "name": "findByIdAndUserId",
+      "signature": "public abstract java.util.Optional<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByIdAndUserId(java.lang.Long,java.lang.Long)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.id = :id AND k.userId = :userId"
+      }
+    },
+    {
+      "name": "findByIdInAndUserId",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByIdInAndUserId(java.util.List<java.lang.Long>,java.lang.Long)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.id IN :ids AND k.userId = :userId"
+      }
+    },
+    {
+      "name": "findByUserIdAndCategoryIsNullOrderByUploadedAtDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByUserIdAndCategoryIsNullOrderByUploadedAtDesc(java.lang.Long)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.userId = :userId AND k.category IS NULL ORDER BY k.uploadedAt desc"
+      }
+    },
+    {
+      "name": "findByUserIdAndCategoryOrderByUploadedAtDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByUserIdAndCategoryOrderByUploadedAtDesc(java.lang.Long,java.lang.String)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.userId = :userId AND k.category = :category ORDER BY k.uploadedAt desc"
+      }
+    },
+    {
+      "name": "findByUserIdAndFileHash",
+      "signature": "public abstract java.util.Optional<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByUserIdAndFileHash(java.lang.Long,java.lang.String)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.userId = :userId AND k.fileHash = :fileHash"
+      }
+    },
+    {
+      "name": "findByUserIdAndVectorStatusOrderByUploadedAtDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByUserIdAndVectorStatusOrderByUploadedAtDesc(java.lang.Long,interview.modules.knowledgebase.model.VectorStatus)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.userId = :userId AND k.vectorStatus = :vectorStatus ORDER BY k.uploadedAt desc"
+      }
+    },
+    {
+      "name": "findByUserIdOrderByUploadedAtDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByUserIdOrderByUploadedAtDesc(java.lang.Long)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.userId = :userId ORDER BY k.uploadedAt desc"
+      }
+    },
+    {
+      "name": "findByVectorStatusOrderByUploadedAtDesc",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.findByVectorStatusOrderByUploadedAtDesc(interview.modules.knowledgebase.model.VectorStatus)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.vectorStatus = :vectorStatus ORDER BY k.uploadedAt desc"
+      }
+    },
+    {
+      "name": "incrementQuestionCountBatch",
+      "signature": "public abstract int interview.modules.knowledgebase.repository.KnowledgeBaseRepository.incrementQuestionCountBatch(java.util.List<java.lang.Long>)",
+      "query": {
+        "query": "UPDATE KnowledgeBaseEntity k SET k.questionCount = k.questionCount + 1 WHERE k.id IN :ids"
+      }
+    },
+    {
+      "name": "incrementQuestionCountBatchByUserId",
+      "signature": "public abstract int interview.modules.knowledgebase.repository.KnowledgeBaseRepository.incrementQuestionCountBatchByUserId(java.lang.Long,java.util.List<java.lang.Long>)",
+      "query": {
+        "query": "UPDATE KnowledgeBaseEntity k SET k.questionCount = k.questionCount + 1 WHERE k.userId = :userId AND k.id IN :ids"
+      }
+    },
+    {
+      "name": "searchByKeyword",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.searchByKeyword(java.lang.String)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE LOWER(k.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(k.originalFilename) LIKE LOWER(CONCAT('%', :keyword, '%')) ORDER BY k.uploadedAt DESC"
+      }
+    },
+    {
+      "name": "searchByKeywordAndUserId",
+      "signature": "public abstract java.util.List<interview.modules.knowledgebase.model.KnowledgeBaseEntity> interview.modules.knowledgebase.repository.KnowledgeBaseRepository.searchByKeywordAndUserId(java.lang.Long,java.lang.String)",
+      "query": {
+        "query": "SELECT k FROM KnowledgeBaseEntity k WHERE k.userId = :userId AND (LOWER(k.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(k.originalFilename) LIKE LOWER(CONCAT('%', :keyword, '%'))) ORDER BY k.uploadedAt DESC"
+      }
+    },
+    {
+      "name": "sumAccessCount",
+      "signature": "public abstract long interview.modules.knowledgebase.repository.KnowledgeBaseRepository.sumAccessCount()",
+      "query": {
+        "query": "SELECT COALESCE(SUM(k.accessCount), 0) FROM KnowledgeBaseEntity k"
+      }
+    },
+    {
+      "name": "sumAccessCountByUserId",
+      "signature": "public abstract long interview.modules.knowledgebase.repository.KnowledgeBaseRepository.sumAccessCountByUserId(java.lang.Long)",
+      "query": {
+        "query": "SELECT COALESCE(SUM(k.accessCount), 0) FROM KnowledgeBaseEntity k WHERE k.userId = :userId"
+      }
+    },
+    {
+      "name": "sumQuestionCount",
+      "signature": "public abstract long interview.modules.knowledgebase.repository.KnowledgeBaseRepository.sumQuestionCount()",
+      "query": {
+        "query": "SELECT COALESCE(SUM(k.questionCount), 0) FROM KnowledgeBaseEntity k"
+      }
+    },
+    {
+      "name": "deleteAllByIdInBatch",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "deleteAllInBatch",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "deleteAllInBatch",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "deleteInBatch",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "flush",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "getById",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "getOne",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "getReferenceById",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "saveAllAndFlush",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "saveAndFlush",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "count",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "delete",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "deleteAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "deleteAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "deleteAllById",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "deleteById",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "existsById",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findById",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "save",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAllById",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAllById",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "saveAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "saveAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "count",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "exists",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findAll",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findBy",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    },
+    {
+      "name": "findOne",
+      "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+      "fragment": {
+        "interface": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+        "fragment": "org.springframework.data.jpa.repository.support.SimpleJpaRepository"
+      }
+    }
+  ]
+}
