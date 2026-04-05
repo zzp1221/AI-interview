@@ -624,6 +624,9 @@
       ]
     },
     {
+      "type": "interview.common.config.ApiNoCacheFilter"
+    },
+    {
       "type": "interview.common.config.AppConfigProperties",
       "fields": [
         {
@@ -883,6 +886,9 @@
     },
     {
       "type": "interview.common.security.AuthInterceptor"
+    },
+    {
+      "type": "interview.common.security.AuthTokenService"
     },
     {
       "type": "interview.common.security.CurrentUserProvider"
@@ -3254,6 +3260,14 @@
           "parameterTypes": [ ]
         },
         {
+          "name": "getUser",
+          "parameterTypes": [ ]
+        },
+        {
+          "name": "getUserId",
+          "parameterTypes": [ ]
+        },
+        {
           "name": "onCreate",
           "parameterTypes": [ ]
         },
@@ -3333,6 +3347,18 @@
           "name": "setUploadedAt",
           "parameterTypes": [
             "java.time.LocalDateTime"
+          ]
+        },
+        {
+          "name": "setUser",
+          "parameterTypes": [
+            "interview.modules.user.model.UserEntity"
+          ]
+        },
+        {
+          "name": "setUserId",
+          "parameterTypes": [
+            "java.lang.Long"
           ]
         }
       ]

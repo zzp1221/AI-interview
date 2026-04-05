@@ -8,7 +8,6 @@ import org.redisson.api.stream.StreamAddArgs;
 import org.redisson.api.stream.StreamCreateGroupArgs;
 import org.redisson.api.stream.StreamMessageId;
 import org.redisson.api.stream.StreamReadGroupArgs;
-import org.redisson.client.RedisException;
 import org.redisson.client.codec.StringCodec;
 import org.springframework.stereotype.Service;
 
@@ -239,9 +238,9 @@ public class RedisService {
                             .count(count)
                             .timeout(Duration.ofMillis(blockTimeoutMs))
             );
-        } catch (RedisException e) {
-            if (isNoGroupError(e)) {
-                log.warn("检测到消费者组缺失，开始自动修复: stream={}, group={}", streamKey, groupName);
+        } catch (Exception e) {
+            if (isMissingStreamGroupError(e)) {
+                log.warn("检测到 Stream 或消费者组缺失，开始自动修复: stream={}, group={}", streamKey, groupName);
                 createStreamGroup(streamKey, groupName);
                 return false;
             }
@@ -276,6 +275,14 @@ public class RedisService {
 
     private boolean isNoGroupError(Throwable throwable) {
         return containsRedisError(throwable, "NOGROUP");
+    }
+
+    private boolean isNoSuchKeyError(Throwable throwable) {
+        return containsRedisError(throwable, "No such key");
+    }
+
+    private boolean isMissingStreamGroupError(Throwable throwable) {
+        return isNoGroupError(throwable) || isNoSuchKeyError(throwable);
     }
 
     private boolean isBusyGroupError(Throwable throwable) {

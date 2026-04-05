@@ -18,6 +18,27 @@
       }
     },
     {
+      "name": "findByIdAndUserId",
+      "signature": "public abstract java.util.Optional<interview.modules.resume.model.ResumeEntity> interview.modules.resume.repository.ResumeRepository.findByIdAndUserId(java.lang.Long,java.lang.Long)",
+      "query": {
+        "query": "SELECT r FROM ResumeEntity r WHERE r.id = :id AND r.userId = :userId"
+      }
+    },
+    {
+      "name": "findByUserIdAndFileHash",
+      "signature": "public abstract java.util.Optional<interview.modules.resume.model.ResumeEntity> interview.modules.resume.repository.ResumeRepository.findByUserIdAndFileHash(java.lang.Long,java.lang.String)",
+      "query": {
+        "query": "SELECT r FROM ResumeEntity r WHERE r.userId = :userId AND r.fileHash = :fileHash"
+      }
+    },
+    {
+      "name": "findByUserIdOrderByUploadedAtDesc",
+      "signature": "public abstract java.util.List<interview.modules.resume.model.ResumeEntity> interview.modules.resume.repository.ResumeRepository.findByUserIdOrderByUploadedAtDesc(java.lang.Long)",
+      "query": {
+        "query": "SELECT r FROM ResumeEntity r WHERE r.userId = :userId ORDER BY r.uploadedAt desc"
+      }
+    },
+    {
       "name": "deleteAllByIdInBatch",
       "signature": "org.springframework.data.jpa.repository.support.SimpleJpaRepository",
       "fragment": {

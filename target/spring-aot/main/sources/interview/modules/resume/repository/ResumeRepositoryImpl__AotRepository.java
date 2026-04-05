@@ -3,7 +3,9 @@ package interview.modules.resume.repository;
 import interview.modules.resume.model.ResumeEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.lang.Long;
 import java.lang.String;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.aot.generate.Generated;
 import org.springframework.data.jpa.repository.aot.AotRepositoryFragmentSupport;
@@ -47,5 +49,40 @@ public class ResumeRepositoryImpl__AotRepository extends AotRepositoryFragmentSu
     query.setParameter("fileHash", fileHash);
 
     return Optional.ofNullable((ResumeEntity) convertOne(query.getSingleResultOrNull(), false, ResumeEntity.class));
+  }
+
+  /**
+   * AOT generated implementation of {@link ResumeRepository#findByIdAndUserId(java.lang.Long,java.lang.Long)}.
+   */
+  public Optional<ResumeEntity> findByIdAndUserId(Long id, Long userId) {
+    String queryString = "SELECT r FROM ResumeEntity r WHERE r.id = :id AND r.userId = :userId";
+    Query query = this.entityManager.createQuery(queryString);
+    query.setParameter("id", id);
+    query.setParameter("userId", userId);
+
+    return Optional.ofNullable((ResumeEntity) convertOne(query.getSingleResultOrNull(), false, ResumeEntity.class));
+  }
+
+  /**
+   * AOT generated implementation of {@link ResumeRepository#findByUserIdAndFileHash(java.lang.Long,java.lang.String)}.
+   */
+  public Optional<ResumeEntity> findByUserIdAndFileHash(Long userId, String fileHash) {
+    String queryString = "SELECT r FROM ResumeEntity r WHERE r.userId = :userId AND r.fileHash = :fileHash";
+    Query query = this.entityManager.createQuery(queryString);
+    query.setParameter("userId", userId);
+    query.setParameter("fileHash", fileHash);
+
+    return Optional.ofNullable((ResumeEntity) convertOne(query.getSingleResultOrNull(), false, ResumeEntity.class));
+  }
+
+  /**
+   * AOT generated implementation of {@link ResumeRepository#findByUserIdOrderByUploadedAtDesc(java.lang.Long)}.
+   */
+  public List<ResumeEntity> findByUserIdOrderByUploadedAtDesc(Long userId) {
+    String queryString = "SELECT r FROM ResumeEntity r WHERE r.userId = :userId ORDER BY r.uploadedAt desc";
+    Query query = this.entityManager.createQuery(queryString);
+    query.setParameter("userId", userId);
+
+    return (List<ResumeEntity>) query.getResultList();
   }
 }

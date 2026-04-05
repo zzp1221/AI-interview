@@ -1,5 +1,6 @@
 package interview.modules.resume.service;
 
+import interview.common.security.CurrentUserProvider;
 import interview.infrastructure.file.FileHashService;
 import interview.infrastructure.mapper.ResumeMapper;
 import interview.modules.resume.repository.ResumeAnalysisRepository;
@@ -20,8 +21,8 @@ public class ResumePersistenceService__BeanDefinitions {
    */
   private static BeanInstanceSupplier<ResumePersistenceService> getResumePersistenceServiceInstanceSupplier(
       ) {
-    return BeanInstanceSupplier.<ResumePersistenceService>forConstructor(ResumeRepository.class, ResumeAnalysisRepository.class, ObjectMapper.class, ResumeMapper.class, FileHashService.class)
-            .withGenerator((registeredBean, args) -> new ResumePersistenceService(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)));
+    return BeanInstanceSupplier.<ResumePersistenceService>forConstructor(ResumeRepository.class, ResumeAnalysisRepository.class, ObjectMapper.class, ResumeMapper.class, FileHashService.class, CurrentUserProvider.class)
+            .withGenerator((registeredBean, args) -> new ResumePersistenceService(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5)));
   }
 
   /**

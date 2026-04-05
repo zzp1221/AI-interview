@@ -2,6 +2,7 @@ package interview;
 
 import interview.common.ai.StructuredOutputInvoker__BeanDefinitions;
 import interview.common.aspect.RateLimitAspect__BeanDefinitions;
+import interview.common.config.ApiNoCacheFilter__BeanDefinitions;
 import interview.common.config.AppConfigProperties__BeanDefinitions;
 import interview.common.config.CorsConfig__BeanDefinitions;
 import interview.common.config.S3Config__BeanDefinitions;
@@ -9,6 +10,7 @@ import interview.common.config.StorageConfigProperties__BeanDefinitions;
 import interview.common.config.WebMvcConfig__BeanDefinitions;
 import interview.common.exception.GlobalExceptionHandler__BeanDefinitions;
 import interview.common.security.AuthInterceptor__BeanDefinitions;
+import interview.common.security.AuthTokenService__BeanDefinitions;
 import interview.common.security.CurrentUserProvider__BeanDefinitions;
 import interview.infrastructure.export.PdfExportService__BeanDefinitions;
 import interview.infrastructure.file.ContentTypeDetectionService__BeanDefinitions;
@@ -283,6 +285,7 @@ public class AiInterviewApplication__BeanFactoryRegistrations {
     beanFactory.registerBeanDefinition("aiInterviewApplication", AiInterviewApplication__BeanDefinitions.getAiInterviewApplicationBeanDefinition());
     beanFactory.registerBeanDefinition("structuredOutputInvoker", StructuredOutputInvoker__BeanDefinitions.getStructuredOutputInvokerBeanDefinition());
     beanFactory.registerBeanDefinition("rateLimitAspect", RateLimitAspect__BeanDefinitions.getRateLimitAspectBeanDefinition());
+    beanFactory.registerBeanDefinition("apiNoCacheFilter", ApiNoCacheFilter__BeanDefinitions.getApiNoCacheFilterBeanDefinition());
     beanFactory.registerBeanDefinition("appConfigProperties", AppConfigProperties__BeanDefinitions.getAppConfigPropertiesBeanDefinition());
     beanFactory.registerBeanDefinition("corsConfig", CorsConfig__BeanDefinitions.getCorsConfigBeanDefinition());
     beanFactory.registerBeanDefinition("s3Config", S3Config__BeanDefinitions.getSConfigBeanDefinition());
@@ -290,6 +293,7 @@ public class AiInterviewApplication__BeanFactoryRegistrations {
     beanFactory.registerBeanDefinition("webMvcConfig", WebMvcConfig__BeanDefinitions.getWebMvcConfigBeanDefinition());
     beanFactory.registerBeanDefinition("globalExceptionHandler", GlobalExceptionHandler__BeanDefinitions.getGlobalExceptionHandlerBeanDefinition());
     beanFactory.registerBeanDefinition("authInterceptor", AuthInterceptor__BeanDefinitions.getAuthInterceptorBeanDefinition());
+    beanFactory.registerBeanDefinition("authTokenService", AuthTokenService__BeanDefinitions.getAuthTokenServiceBeanDefinition());
     beanFactory.registerBeanDefinition("currentUserProvider", CurrentUserProvider__BeanDefinitions.getCurrentUserProviderBeanDefinition());
     beanFactory.registerBeanDefinition("pdfExportService", PdfExportService__BeanDefinitions.getPdfExportServiceBeanDefinition());
     beanFactory.registerBeanDefinition("contentTypeDetectionService", ContentTypeDetectionService__BeanDefinitions.getContentTypeDetectionServiceBeanDefinition());
@@ -653,11 +657,11 @@ public class AiInterviewApplication__BeanFactoryRegistrations {
     beanFactory.registerBeanDefinition("jpa.KnowledgeBaseRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition1());
     beanFactory.registerBeanDefinition("knowledgeBaseRepository", KnowledgeBaseRepository__BeanDefinitions.getKnowledgeBaseRepositoryBeanDefinition());
     beanFactory.registerBeanDefinition("jpa.named-queries#2", PropertiesBasedNamedQueries__BeanDefinitions.getNamedqueriesBeanDefinition2());
-    beanFactory.registerBeanDefinition("jpa.InterviewSessionRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition2());
-    beanFactory.registerBeanDefinition("interviewSessionRepository", InterviewSessionRepository__BeanDefinitions.getInterviewSessionRepositoryBeanDefinition());
-    beanFactory.registerBeanDefinition("jpa.named-queries#3", PropertiesBasedNamedQueries__BeanDefinitions.getNamedqueriesBeanDefinition3());
-    beanFactory.registerBeanDefinition("jpa.ResumeAnalysisRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition3());
+    beanFactory.registerBeanDefinition("jpa.ResumeAnalysisRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition2());
     beanFactory.registerBeanDefinition("resumeAnalysisRepository", ResumeAnalysisRepository__BeanDefinitions.getResumeAnalysisRepositoryBeanDefinition());
+    beanFactory.registerBeanDefinition("jpa.named-queries#3", PropertiesBasedNamedQueries__BeanDefinitions.getNamedqueriesBeanDefinition3());
+    beanFactory.registerBeanDefinition("jpa.UserRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition3());
+    beanFactory.registerBeanDefinition("userRepository", UserRepository__BeanDefinitions.getUserRepositoryBeanDefinition());
     beanFactory.registerBeanDefinition("jpa.named-queries#4", PropertiesBasedNamedQueries__BeanDefinitions.getNamedqueriesBeanDefinition4());
     beanFactory.registerBeanDefinition("jpa.InterviewAnswerRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition4());
     beanFactory.registerBeanDefinition("interviewAnswerRepository", InterviewAnswerRepository__BeanDefinitions.getInterviewAnswerRepositoryBeanDefinition());
@@ -665,8 +669,8 @@ public class AiInterviewApplication__BeanFactoryRegistrations {
     beanFactory.registerBeanDefinition("jpa.RagChatMessageRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition5());
     beanFactory.registerBeanDefinition("ragChatMessageRepository", RagChatMessageRepository__BeanDefinitions.getRagChatMessageRepositoryBeanDefinition());
     beanFactory.registerBeanDefinition("jpa.named-queries#6", PropertiesBasedNamedQueries__BeanDefinitions.getNamedqueriesBeanDefinition6());
-    beanFactory.registerBeanDefinition("jpa.UserRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition6());
-    beanFactory.registerBeanDefinition("userRepository", UserRepository__BeanDefinitions.getUserRepositoryBeanDefinition());
+    beanFactory.registerBeanDefinition("jpa.InterviewSessionRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition6());
+    beanFactory.registerBeanDefinition("interviewSessionRepository", InterviewSessionRepository__BeanDefinitions.getInterviewSessionRepositoryBeanDefinition());
     beanFactory.registerBeanDefinition("jpa.named-queries#7", PropertiesBasedNamedQueries__BeanDefinitions.getNamedqueriesBeanDefinition7());
     beanFactory.registerBeanDefinition("jpa.RagChatSessionRepository.fragments#0", RepositoryComposition__BeanDefinitions.RepositoryFragments.getFragmentsBeanDefinition7());
     beanFactory.registerBeanDefinition("ragChatSessionRepository", RagChatSessionRepository__BeanDefinitions.getRagChatSessionRepositoryBeanDefinition());
