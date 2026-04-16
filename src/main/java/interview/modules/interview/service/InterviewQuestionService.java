@@ -29,8 +29,10 @@ public class InterviewQuestionService {
     private static final Logger log = LoggerFactory.getLogger(InterviewQuestionService.class);
 
     private final ChatClient chatClient;
-    private final PromptTemplate systemPromptTemplate;
-    private final PromptTemplate userPromptTemplate;
+    private final PromptTemplate skillSystemPromptTemplate;
+    private final PromptTemplate skillUserPromptTemplate;
+    private final PromptTemplate resumeSystemPromptTemplate;
+    private final PromptTemplate resumeUserPromptTemplate;
     private final BeanOutputConverter<QuestionListDTO> outputConverter;
     private final StructuredOutputInvoker structuredOutputInvoker;
     private final int followUpCount;//可配置的追问数量
@@ -85,13 +87,17 @@ public class InterviewQuestionService {
     public InterviewQuestionService(
             ChatClient.Builder chatClientBuilder,
             StructuredOutputInvoker structuredOutputInvoker,
-            @Value("classpath:prompts/interview-question-system.st") Resource systemPromptResource,
-            @Value("classpath:prompts/interview-question-user.st") Resource userPromptResource,
+            @Value("classpath:prompts/interview-question-skill-system.st") Resource skillSystemPromptResource,
+            @Value("classpath:prompts/interview-question-skill-user.st") Resource skillUserPromptResource,
+            @Value("classpath:prompts/interview-question-resume-system.st") Resource resumeSystemPromptResource,
+            @Value("classpath:prompts/interview-question-resume-user.st") Resource resumeUserPromptResource,
             @Value("${app.interview.follow-up-count:1}") int followUpCount) throws IOException {
         this.chatClient = chatClientBuilder.build();
         this.structuredOutputInvoker = structuredOutputInvoker;
-        this.systemPromptTemplate = new PromptTemplate(systemPromptResource.getContentAsString(StandardCharsets.UTF_8));
-        this.userPromptTemplate = new PromptTemplate(userPromptResource.getContentAsString(StandardCharsets.UTF_8));
+        this.skillSystemPromptTemplate = new PromptTemplate(skillSystemPromptResource.getContentAsString(StandardCharsets.UTF_8));
+        this.skillUserPromptTemplate = new PromptTemplate(skillUserPromptResource.getContentAsString(StandardCharsets.UTF_8));
+        this.resumeSystemPromptTemplate = new PromptTemplate(resumeSystemPromptResource.getContentAsString(StandardCharsets.UTF_8));
+        this.resumeUserPromptTemplate = new PromptTemplate(resumeUserPromptResource.getContentAsString(StandardCharsets.UTF_8));
         this.outputConverter = new BeanOutputConverter<>(QuestionListDTO.class);
         this.followUpCount = Math.max(0, Math.min(followUpCount, MAX_FOLLOW_UP_COUNT));
     }
@@ -118,8 +124,15 @@ public class InterviewQuestionService {
         QuestionDistribution distribution = calculateDistribution(questionCount);
 
         try {
+            PromptTemplate selectedSystemTemplate = useSkillPrompt(skillContext)
+                    ? skillSystemPromptTemplate
+                    : resumeSystemPromptTemplate;
+            PromptTemplate selectedUserTemplate = useSkillPrompt(skillContext)
+                    ? skillUserPromptTemplate
+                    : resumeUserPromptTemplate;
+
             // 加载系统提示词
-            String systemPrompt = systemPromptTemplate.render();
+            String systemPrompt = selectedSystemTemplate.render();
 
             // 加载用户提示词并填充变量
             Map<String, Object> variables = new HashMap<>();
@@ -144,7 +157,7 @@ public class InterviewQuestionService {
                 variables.put("historicalQuestions", "暂无历史提问");
             }
 
-            String userPrompt = userPromptTemplate.render(variables);
+            String userPrompt = selectedUserTemplate.render(variables);
 
             // 添加格式指令到系统提示词
             String systemPromptWithFormat = systemPrompt + "\n\n" + outputConverter.getFormat();
@@ -191,6 +204,14 @@ public class InterviewQuestionService {
             case "senior" -> "高级（3年以上）：关注架构设计、性能优化与复杂故障排查";
             default -> "中级（1-3年）：关注基础原理与工程实践";
         };
+    }
+
+    private boolean useSkillPrompt(String skillContext) {
+        if (skillContext == null || skillContext.isBlank()) {
+            return false;
+        }
+        String normalized = skillContext.trim();
+        return !normalized.contains("默认Java后端综合面试");
     }
 
     /**

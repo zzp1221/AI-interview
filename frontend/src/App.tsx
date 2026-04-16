@@ -10,6 +10,9 @@ const HistoryList = lazy(() => import('./pages/HistoryPage'));
 const ResumeDetailPage = lazy(() => import('./pages/ResumeDetailPage'));
 const Interview = lazy(() => import('./pages/InterviewPage'));
 const InterviewHistoryPage = lazy(() => import('./pages/InterviewHistoryPage'));
+const InterviewSchedulePage = lazy(() => import('./pages/InterviewSchedulePage'));
+const VoiceInterviewPage = lazy(() => import('./pages/VoiceInterviewPage'));
+const VoiceInterviewEvaluationPage = lazy(() => import('./pages/VoiceInterviewEvaluationPage'));
 const KnowledgeBaseQueryPage = lazy(() => import('./pages/KnowledgeBaseQueryPage'));
 const KnowledgeBaseUploadPage = lazy(() => import('./pages/KnowledgeBaseUploadPage'));
 const KnowledgeBaseManagePage = lazy(() => import('./pages/KnowledgeBaseManagePage'));
@@ -218,6 +221,9 @@ function App() {
             <Route path="history" element={<HistoryListWrapper />} />
             <Route path="history/:resumeId" element={<ResumeDetailWrapper />} />
             <Route path="interviews" element={<InterviewHistoryWrapper />} />
+            <Route path="interview-schedule" element={<InterviewSchedulePage />} />
+            <Route path="voice-interview" element={<VoiceInterviewPage />} />
+            <Route path="voice-interview/:sessionId/evaluation" element={<VoiceInterviewEvaluationPage />} />
             <Route path="interview/:resumeId" element={<InterviewWrapper />} />
             <Route path="knowledgebase" element={<KnowledgeBaseManagePageWrapper />} />
             <Route path="knowledgebase/upload" element={<KnowledgeBaseUploadPageWrapper />} />

@@ -1,0 +1,8 @@
+﻿id: python-backend
+name: Python 后端
+refs:
+  - shared/python-basic.md
+  - shared/django-flask.md
+  - shared/database.md
+  - shared/redis.md
+  - shared/distributed.md

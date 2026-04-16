@@ -1,6 +1,6 @@
 import {Link, Outlet, useLocation} from 'react-router-dom';
 import {motion} from 'framer-motion';
-import {ChevronRight, Database, FileStack, MessageSquare, Moon, Sparkles, Sun, Upload, Users,} from 'lucide-react';
+import {CalendarClock, ChevronRight, Database, FileStack, MessageSquare, Mic, Moon, Sparkles, Sun, Upload, Users,} from 'lucide-react';
 import {useTheme} from '../hooks/useTheme';
 
 interface NavItem {
@@ -31,6 +31,8 @@ export default function Layout() {
         { id: 'upload', path: '/upload', label: '上传简历', icon: Upload, description: 'AI 分析简历' },
         { id: 'resumes', path: '/history', label: '简历库', icon: FileStack, description: '管理所有简历' },
         { id: 'interviews', path: '/interviews', label: '面试记录', icon: Users, description: '查看面试历史' },
+        { id: 'schedule', path: '/interview-schedule', label: '面试日程', icon: CalendarClock, description: '管理面试安排' },
+        { id: 'voice', path: '/voice-interview', label: '语音面试', icon: Mic, description: '实时语音模拟面试' },
       ],
     },
     {

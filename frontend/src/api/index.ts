@@ -5,6 +5,8 @@ export { request, getErrorMessage } from './request';
 export { authApi } from './auth';
 export { resumeApi } from './resume';
 export { interviewApi } from './interview';
+export { interviewScheduleApi } from './interviewSchedule';
+export { voiceInterviewApi } from './voiceInterview';
 export { skillApi } from './skill';
 export { knowledgeBaseApi } from './knowledgebase';
 export { historyApi } from './history';

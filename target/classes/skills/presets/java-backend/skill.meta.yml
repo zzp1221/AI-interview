@@ -1,0 +1,8 @@
+﻿id: java-backend
+name: Java 后端
+refs:
+  - shared/java.md
+  - shared/spring.md
+  - shared/mysql.md
+  - shared/redis.md
+  - shared/system-design-scenarios.md
