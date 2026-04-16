@@ -5,6 +5,7 @@ import interview.modules.interview.model.CreateInterviewRequest;
 import interview.modules.interview.model.InterviewDetailDTO;
 import interview.modules.interview.model.InterviewReportDTO;
 import interview.modules.interview.model.InterviewSessionDTO;
+import interview.modules.interview.model.SessionListItemDTO;
 import interview.modules.interview.model.SubmitAnswerResponse;
 import interview.modules.interview.service.InterviewHistoryService;
 import interview.modules.interview.service.InterviewPersistenceService;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 @Validated
@@ -38,6 +40,14 @@ public class InterviewController {
     private final InterviewSessionService interviewSessionService;
     private final InterviewHistoryService interviewHistoryService;
     private final InterviewPersistenceService interviewPersistenceService;
+
+    @GetMapping("/api/interview/sessions")
+    public Result<List<SessionListItemDTO>> listSessions() {
+        List<SessionListItemDTO> items = interviewPersistenceService.findAll().stream()
+                .map(SessionListItemDTO::from)
+                .toList();
+        return Result.success(items);
+    }
 
     @PostMapping("/api/interview/sessions")
     public Result<InterviewSessionDTO> createSession(@Valid @RequestBody CreateInterviewRequest request) {

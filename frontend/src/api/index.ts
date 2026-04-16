@@ -5,5 +5,6 @@ export { request, getErrorMessage } from './request';
 export { authApi } from './auth';
 export { resumeApi } from './resume';
 export { interviewApi } from './interview';
+export { skillApi } from './skill';
 export { knowledgeBaseApi } from './knowledgebase';
 export { historyApi } from './history';

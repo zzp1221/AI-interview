@@ -241,6 +241,13 @@ public class InterviewPersistenceService {
     public Optional<InterviewSessionEntity> findBySessionId(String sessionId) {
         return sessionRepository.findBySessionId(sessionId);
     }
+
+    /**
+     * 获取全部面试会话（按创建时间倒序）
+     */
+    public List<InterviewSessionEntity> findAll() {
+        return sessionRepository.findAllByOrderByCreatedAtDesc();
+    }
     
     /**
      * 获取简历的所有面试记录

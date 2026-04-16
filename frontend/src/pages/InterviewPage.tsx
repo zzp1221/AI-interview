@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {AnimatePresence, motion} from 'framer-motion';
 import {interviewApi} from '../api/interview';
+import { skillApi, type CategoryDTO, type SkillDTO } from '../api/skill';
 import ConfirmDialog from '../components/ConfirmDialog';
 import InterviewConfigPanel from '../components/InterviewConfigPanel';
 import InterviewChatPanel from '../components/InterviewChatPanel';
@@ -36,6 +37,13 @@ export default function Interview({ resumeText, resumeId, onBack, onInterviewCom
   const [unfinishedSession, setUnfinishedSession] = useState<InterviewSession | null>(null);
   const [showCompleteConfirm, setShowCompleteConfirm] = useState(false);
   const [forceCreateNew, setForceCreateNew] = useState(false);
+  const [skills, setSkills] = useState<SkillDTO[]>([]);
+  const [loadingSkills, setLoadingSkills] = useState(false);
+  const [skillId, setSkillId] = useState('java-backend');
+  const [difficulty, setDifficulty] = useState<'junior' | 'mid' | 'senior'>('mid');
+  const [customJdText, setCustomJdText] = useState('');
+  const [customCategories, setCustomCategories] = useState<CategoryDTO[]>([]);
+  const [parsingJd, setParsingJd] = useState(false);
 
   // 检查是否有未完成的面试（组件挂载时和resumeId变化时）
   useEffect(() => {
@@ -44,6 +52,21 @@ export default function Interview({ resumeText, resumeId, onBack, onInterviewCom
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resumeId]);
+
+  useEffect(() => {
+    const loadSkills = async () => {
+      setLoadingSkills(true);
+      try {
+        const list = await skillApi.listSkills();
+        setSkills(list);
+      } catch (err) {
+        console.error('加载面试方向失败', err);
+      } finally {
+        setLoadingSkills(false);
+      }
+    };
+    loadSkills();
+  }, []);
 
   const checkUnfinishedSession = async () => {
     if (!resumeId) return;
@@ -109,6 +132,23 @@ export default function Interview({ resumeText, resumeId, onBack, onInterviewCom
         setStage('interview');
   };
 
+  const handleParseJd = async () => {
+    if (customJdText.trim().length < 50) {
+      setError('JD 内容至少 50 字');
+      return;
+    }
+    setParsingJd(true);
+    setError('');
+    try {
+      const categories = await skillApi.parseJd(customJdText);
+      setCustomCategories(categories);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'JD 解析失败');
+    } finally {
+      setParsingJd(false);
+    }
+  };
+
     const startInterview = async () => {
     setIsCreating(true);
     setError('');
@@ -119,7 +159,13 @@ export default function Interview({ resumeText, resumeId, onBack, onInterviewCom
         resumeText,
         questionCount,
         resumeId,
-        forceCreate: forceCreateNew
+        forceCreate: forceCreateNew,
+        skillId,
+        difficulty,
+        customCategories: skillId === 'custom'
+          ? customCategories.map(cat => ({ key: cat.key, label: cat.label, priority: cat.priority }))
+          : undefined,
+        jdText: skillId === 'custom' ? customJdText : undefined
       });
 
             // 重置强制创建标志
@@ -231,6 +277,17 @@ export default function Interview({ resumeText, resumeId, onBack, onInterviewCom
         resumeText={resumeText}
         onBack={onBack}
         error={error}
+        skills={skills}
+        loadingSkills={loadingSkills}
+        skillId={skillId}
+        onSkillChange={setSkillId}
+        difficulty={difficulty}
+        onDifficultyChange={setDifficulty}
+        customJdText={customJdText}
+        onCustomJdTextChange={setCustomJdText}
+        customCategories={customCategories}
+        parsingJd={parsingJd}
+        onParseJd={handleParseJd}
       />
     );
   };

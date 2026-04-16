@@ -104,7 +104,13 @@ public class InterviewQuestionService {
      * @param historicalQuestions 历史问题列表（可选）
      * @return 面试问题列表
      */
-    public List<InterviewQuestionDTO> generateQuestions(String resumeText, int questionCount, List<String> historicalQuestions) {
+    public List<InterviewQuestionDTO> generateQuestions(
+            String resumeText,
+            int questionCount,
+            List<String> historicalQuestions,
+            String skillContext,
+            String difficulty
+    ) {
         log.info("开始生成面试问题，简历长度: {}, 问题数量: {}, 历史问题数: {}",
                 resumeText.length(), questionCount, historicalQuestions != null ? historicalQuestions.size() : 0);
 
@@ -127,6 +133,8 @@ public class InterviewQuestionService {
             variables.put("springCount", distribution.spring);
             variables.put("followUpCount", followUpCount);
             variables.put("resumeText", resumeText);
+            variables.put("skillContext", skillContext == null || skillContext.isBlank() ? "默认Java后端综合面试" : skillContext);
+            variables.put("difficultyDescription", mapDifficultyDescription(difficulty));
 
             // 添加历史问题
             if (historicalQuestions != null && !historicalQuestions.isEmpty()) {
@@ -172,6 +180,17 @@ public class InterviewQuestionService {
             // 返回默认问题集
             return generateDefaultQuestions(questionCount);
         }
+    }
+
+    private String mapDifficultyDescription(String difficulty) {
+        if (difficulty == null || difficulty.isBlank()) {
+            return "中级（1-3年）：关注基础原理与工程实践";
+        }
+        return switch (difficulty.trim().toLowerCase()) {
+            case "junior" -> "校招/初级（0-1年）：关注基础概念、常见场景与规范编码";
+            case "senior" -> "高级（3年以上）：关注架构设计、性能优化与复杂故障排查";
+            default -> "中级（1-3年）：关注基础原理与工程实践";
+        };
     }
 
     /**

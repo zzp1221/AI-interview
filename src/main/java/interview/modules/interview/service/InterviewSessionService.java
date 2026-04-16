@@ -8,17 +8,12 @@ import interview.infrastructure.redis.InterviewSessionCache.CachedSession;
 import interview.modules.interview.listener.EvaluateStreamProducer;
 import interview.modules.interview.model.*;
 import interview.modules.interview.model.InterviewSessionDTO.SessionStatus;
+import interview.modules.interview.skill.InterviewSkillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +35,7 @@ public class InterviewSessionService {
     private final InterviewSessionCache sessionCache;
     private final ObjectMapper objectMapper;
     private final EvaluateStreamProducer evaluateStreamProducer;
+    private final InterviewSkillService interviewSkillService;
 
     /**
      * 创建新的面试会话
@@ -69,10 +65,13 @@ public class InterviewSessionService {
         }
 
         // 生成面试问题
+        String skillContext = buildSkillContext(request);
         List<InterviewQuestionDTO> questions = questionService.generateQuestions(
             request.resumeText(),
             request.questionCount(),
-            historicalQuestions
+            historicalQuestions,
+            skillContext,
+            request.difficulty()
         );
 
         // 保存到 Redis 缓存
@@ -481,5 +480,48 @@ public class InterviewSessionService {
             questions,
             session.getStatus()
         );
+    }
+
+    private String buildSkillContext(CreateInterviewRequest request) {
+        StringBuilder context = new StringBuilder();
+        if (request.skillId() != null && !request.skillId().isBlank()) {
+            if (InterviewSkillService.CUSTOM_SKILL_ID.equals(request.skillId())) {
+                context.append("方向: 自定义JD面试");
+                if (request.customCategories() != null && !request.customCategories().isEmpty()) {
+                    String categories = request.customCategories().stream()
+                            .map(c -> c.label() != null ? c.label() : c.key())
+                            .filter(v -> v != null && !v.isBlank())
+                            .reduce((a, b) -> a + "、" + b)
+                            .orElse("");
+                    if (!categories.isBlank()) {
+                        context.append("；分类: ").append(categories);
+                    }
+                }
+                if (request.jdText() != null && !request.jdText().isBlank()) {
+                    String jdPreview = request.jdText().length() > 600
+                            ? request.jdText().substring(0, 600) + "..."
+                            : request.jdText();
+                    context.append("；JD: ").append(jdPreview);
+                }
+            } else {
+                try {
+                    InterviewSkillService.SkillDTO skill = interviewSkillService.getSkill(request.skillId());
+                    context.append("方向: ").append(skill.name());
+                    if (skill.description() != null && !skill.description().isBlank()) {
+                        context.append("；说明: ").append(skill.description());
+                    }
+                } catch (Exception ignore) {
+                    context.append("方向ID: ").append(request.skillId());
+                }
+            }
+        }
+
+        if (request.difficulty() != null && !request.difficulty().isBlank()) {
+            if (!context.isEmpty()) {
+                context.append("；");
+            }
+            context.append("难度: ").append(request.difficulty());
+        }
+        return context.isEmpty() ? "默认Java后端综合面试" : context.toString();
     }
 }

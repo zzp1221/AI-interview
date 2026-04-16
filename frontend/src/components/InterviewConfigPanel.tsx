@@ -1,5 +1,6 @@
 import {AnimatePresence, motion} from 'framer-motion';
 import type {InterviewSession} from '../types/interview';
+import type { CategoryDTO, SkillDTO } from '../api/skill';
 
 interface InterviewConfigPanelProps {
   questionCount: number;
@@ -13,6 +14,17 @@ interface InterviewConfigPanelProps {
   resumeText: string;
   onBack: () => void;
   error?: string;
+  skills: SkillDTO[];
+  loadingSkills: boolean;
+  skillId: string;
+  onSkillChange: (id: string) => void;
+  difficulty: 'junior' | 'mid' | 'senior';
+  onDifficultyChange: (value: 'junior' | 'mid' | 'senior') => void;
+  customJdText: string;
+  onCustomJdTextChange: (value: string) => void;
+  customCategories: CategoryDTO[];
+  parsingJd: boolean;
+  onParseJd: () => void;
 }
 
 /**
@@ -29,9 +41,26 @@ export default function InterviewConfigPanel({
   onStartNew,
   resumeText,
   onBack,
-  error
+  error,
+  skills,
+  loadingSkills,
+  skillId,
+  onSkillChange,
+  difficulty,
+  onDifficultyChange,
+  customJdText,
+  onCustomJdTextChange,
+  customCategories,
+  parsingJd,
+  onParseJd
 }: InterviewConfigPanelProps) {
   const questionCounts = [6, 8, 10, 12, 15];
+  const difficulties = [
+    { value: 'junior' as const, label: '校招', desc: '0-1 年' },
+    { value: 'mid' as const, label: '中级', desc: '1-3 年' },
+    { value: 'senior' as const, label: '高级', desc: '3 年+' },
+  ];
+  const isCustomSkill = skillId === 'custom';
 
   return (
       <motion.div
@@ -119,6 +148,91 @@ export default function InterviewConfigPanel({
         </AnimatePresence>
 
         <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              面试方向
+            </label>
+            {loadingSkills ? (
+              <div className="text-sm text-slate-500 dark:text-slate-400">加载方向中...</div>
+            ) : (
+              <select
+                value={skillId}
+                onChange={(e) => onSkillChange(e.target.value)}
+                className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200"
+              >
+                {skills.map((skill) => (
+                  <option key={skill.id} value={skill.id}>
+                    {skill.name}
+                  </option>
+                ))}
+                <option value="custom">自定义JD解析</option>
+              </select>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              面试难度
+            </label>
+            <div className="grid grid-cols-3 gap-3">
+              {difficulties.map((item) => (
+                <button
+                  key={item.value}
+                  onClick={() => onDifficultyChange(item.value)}
+                  className={`px-3 py-3 rounded-xl text-sm transition-colors ${
+                    difficulty === item.value
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                  }`}
+                >
+                  <div>{item.label}</div>
+                  <div className="text-xs opacity-80">{item.desc}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <AnimatePresence>
+            {isCustomSkill && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+              >
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  职位描述（JD）
+                </label>
+                <textarea
+                  value={customJdText}
+                  onChange={(e) => onCustomJdTextChange(e.target.value)}
+                  rows={4}
+                  placeholder="请输入或粘贴JD（至少50字）"
+                  className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 resize-none"
+                />
+                <button
+                  onClick={onParseJd}
+                  disabled={parsingJd || customJdText.trim().length < 50}
+                  className="px-4 py-2 rounded-lg bg-primary-500 text-white disabled:opacity-50"
+                >
+                  {parsingJd ? '解析中...' : '解析面试方向'}
+                </button>
+                {customCategories.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {customCategories.map((cat) => (
+                      <span
+                        key={cat.key}
+                        className="px-2 py-1 rounded-full text-xs bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300"
+                      >
+                        {cat.label}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div>
               <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
               题目数量

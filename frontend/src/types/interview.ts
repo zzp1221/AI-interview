@@ -29,11 +29,21 @@ export type QuestionType =
   | 'SPRING' 
   | 'SPRING_BOOT';
 
+export interface SkillCategory {
+  key: string;
+  label: string;
+  priority: 'CORE' | 'NORMAL';
+}
+
 export interface CreateInterviewRequest {
   resumeText: string;
   questionCount: number;
   resumeId?: number;
   forceCreate?: boolean;  // 是否强制创建新会话（忽略未完成的会话）
+  skillId?: string;
+  difficulty?: 'junior' | 'mid' | 'senior';
+  customCategories?: SkillCategory[];
+  jdText?: string;
 }
 
 export interface SubmitAnswerRequest {

@@ -58,4 +58,9 @@ public interface InterviewSessionRepository extends JpaRepository<InterviewSessi
         Long resumeId,
         List<SessionStatus> statuses
     );
+
+    /**
+     * 按创建时间倒序查询所有会话
+     */
+    List<InterviewSessionEntity> findAllByOrderByCreatedAtDesc();
 }
